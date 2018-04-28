@@ -2,33 +2,20 @@
 
 namespace App\Hydrants;
 
-use App\Repositories\User;
+class DatasetHydrant extends Hydrant {
 
-class DatasetHydrant {
-
-	protected $user;
-
-	public function __construct(User $user)
+	public function creating($model, $data)
 	{
-		$this->user = $user;
+		$user = \App\Models\User::CurrentUser();
+		
+		$model->user()->associate($user);
 	}
 
-	public function build($model, $data)
+	public function savedUser($model, $user)
 	{
-		if ($model->exists) {
+		$user = User::find($user['id'])->build($user);
 
-			if (isset($data['user'])) {
-				$model->user()->associate($this->user->find($data['user']['id']));
-			}
-
-		} else {
-
-			$model->user()->associate($this->user->create([
-				"name"	=> "foobar",
-				"email"	=> "test12@email.com",
-				"password" => "password"
-			]));
-
-		}
+		$user->save();
 	}
+
 }

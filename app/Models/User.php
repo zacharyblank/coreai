@@ -5,13 +5,15 @@ namespace App\Models;
 // use Illuminate\Auth\Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Traits\Hydratable;
 
 class User extends Authenticatable implements \App\Repositories\User, JWTSubject
 {
-	// use Authenticatable;
+	use Hydratable;
 	
 	protected $fillable = [
-		'name',
+        'first_name',
+		'last_name',
 		'email',
 		'password',
 	];

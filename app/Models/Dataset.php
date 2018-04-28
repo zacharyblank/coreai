@@ -12,6 +12,11 @@ class Dataset extends DataModel implements \App\Repositories\Dataset
     	'title'
     ];
 
+    public $rules = [
+        'title'     => 'required',
+        'user'      => 'required'
+    ];
+
     public function train()
     {
     	return $this->belongdToMany(Data::class, 'datasets_data')

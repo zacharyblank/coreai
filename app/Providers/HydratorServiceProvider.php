@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Hydrants\DatasetHydrant;
-use App\Models\Dataset;
 use Illuminate\Support\ServiceProvider;
 
 class HydratorServiceProvider extends ServiceProvider
@@ -15,7 +13,8 @@ class HydratorServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Dataset::hydrant(DatasetHydrant::class);
+        \App\Models\Dataset::hydrant(\App\Hydrants\DatasetHydrant::class);
+        \App\Models\User::hydrant(\App\Hydrants\UserHydrant::class);
     }
 
     /**

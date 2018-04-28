@@ -10,6 +10,15 @@ use App\Http\Resources\AuthResource;
 class AuthController extends Controller
 {
 
+    static $rules = [
+        'signup'    => [
+            'first_name'    => 'required',
+            'last_name'     => 'required',
+            'email'         => 'required|email|unique:users',
+            'password'      => 'required',
+        ]
+    ];
+
 	protected $user;
 
     /**
@@ -47,11 +56,13 @@ class AuthController extends Controller
      */
     public function signup(Request $request)
     {
-        $user = $this->user->create($request->all());
+        $user = $this->user->make()->build($request->all());
+
+        $user->save();
 
         $this->user->setCurrentUser($user);
 
-        $token = auth()->attempt($request->all());
+        $token = auth()->tokenById($user->id);
 
         return $this->respondWithToken($token);
     }    

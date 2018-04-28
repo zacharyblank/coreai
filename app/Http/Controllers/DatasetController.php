@@ -51,7 +51,11 @@ class DatasetController extends Controller
      */
     public function store(Request $request)
     {
-        $this->dataset->find(2)->build(array_merge($request->all(), ['user' => ["id" => 1]]))->save();
+        $dataset = $this->dataset->build($request->all());
+        
+        $dataset->save();
+
+        return new DatasetResource($dataset);
     }
 
     /**

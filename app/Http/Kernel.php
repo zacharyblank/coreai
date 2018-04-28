@@ -41,6 +41,7 @@ class Kernel extends HttpKernel
             'throttle:60,1',
             'bindings',
             \App\Http\Middleware\Authenticate::class,
+            \App\Http\Middleware\ValidateRequest::class,
         ],
     ];
 

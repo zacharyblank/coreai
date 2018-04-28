@@ -24,7 +24,7 @@ Class DatasetObserver
      */
     public function saving(Dataset $dataset)
     {
-    	print_r($dataset);
+
     }
 
     /**

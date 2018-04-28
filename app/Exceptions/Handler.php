@@ -13,7 +13,8 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        //
+        \Illuminate\Auth\AuthenticationException::class,
+        \Illuminate\Validation\ValidationException::class,
     ];
 
     /**
@@ -32,9 +33,9 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return void
      */
-    public function report(Exception $exception)
+    public function report(Exception $e)
     {
-        parent::report($exception);
+        parent::report($e);
     }
 
     /**
@@ -44,8 +45,28 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Exception $exception)
+    public function render($request, Exception $e)
     {
-        return parent::render($request, $exception);
+        if ($e instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
+            return response()->error('resource not found', 404);
+        }
+
+        if ($e instanceof \App\Exceptions\ValidationException) {
+            if ($e->getInput()) {
+                return response()->error([
+                    $e->getInput() => [
+                        $e->getInvalid() => $e->getErrors()
+                    ]
+                ], $e->getCode());
+            }
+
+            return response()->error($e->getErrors(), $e->getCode());
+        }
+
+        if ($e instanceof \App\Exceptions\PermissionException) {
+            return response()->error($e->getMessage(), 401);
+        }
+
+        return parent::render($request, $e);
     }
 }
